@@ -14,7 +14,226 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      check_ins: {
+        Row: {
+          created_at: string
+          due_at: string
+          id: string
+          journey_id: string
+          responded_at: string | null
+          status: Database["public"]["Enums"]["checkin_status"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          due_at: string
+          id?: string
+          journey_id: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["checkin_status"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          due_at?: string
+          id?: string
+          journey_id?: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["checkin_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "check_ins_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journeys: {
+        Row: {
+          checkin_interval_minutes: number
+          created_at: string
+          destination: string
+          ended_at: string | null
+          id: string
+          origin: string
+          planned_minutes: number
+          risk_factors: Json
+          risk_score: number | null
+          risk_source: string
+          risk_summary: string | null
+          started_at: string
+          status: Database["public"]["Enums"]["journey_status"]
+          travel_mode: string
+          user_id: string
+        }
+        Insert: {
+          checkin_interval_minutes?: number
+          created_at?: string
+          destination: string
+          ended_at?: string | null
+          id?: string
+          origin: string
+          planned_minutes?: number
+          risk_factors?: Json
+          risk_score?: number | null
+          risk_source?: string
+          risk_summary?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["journey_status"]
+          travel_mode?: string
+          user_id: string
+        }
+        Update: {
+          checkin_interval_minutes?: number
+          created_at?: string
+          destination?: string
+          ended_at?: string | null
+          id?: string
+          origin?: string
+          planned_minutes?: number
+          risk_factors?: Json
+          risk_score?: number | null
+          risk_source?: string
+          risk_summary?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["journey_status"]
+          travel_mode?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          profile_type: Database["public"]["Enums"]["profile_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string
+          id: string
+          profile_type?: Database["public"]["Enums"]["profile_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          profile_type?: Database["public"]["Enums"]["profile_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      safety_reports: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          is_sample: boolean
+          latitude: number
+          longitude: number
+          note: string
+          severity: number
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          is_sample?: boolean
+          latitude: number
+          longitude: number
+          note?: string
+          severity?: number
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          is_sample?: boolean
+          latitude?: number
+          longitude?: number
+          note?: string
+          severity?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      sos_events: {
+        Row: {
+          created_at: string
+          id: string
+          journey_id: string | null
+          kind: string
+          note: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          journey_id?: string | null
+          kind?: string
+          note?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          journey_id?: string | null
+          kind?: string
+          note?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_events_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trusted_contacts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notify_order: number
+          phone: string
+          relationship: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id?: string
+          name: string
+          notify_order?: number
+          phone?: string
+          relationship?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notify_order?: number
+          phone?: string
+          relationship?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +242,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      checkin_status: "pending" | "confirmed" | "missed"
+      journey_status: "active" | "completed" | "cancelled"
+      profile_type: "student" | "woman" | "traveller" | "family" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +371,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      checkin_status: ["pending", "confirmed", "missed"],
+      journey_status: ["active", "completed", "cancelled"],
+      profile_type: ["student", "woman", "traveller", "family", "other"],
+    },
   },
 } as const
